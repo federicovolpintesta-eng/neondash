@@ -210,17 +210,31 @@ function spawnObstacle() {
 }
 
 function handleJump(e) {
-    if (e && e.type === 'touchstart') e.preventDefault();
+    // Si el toque fue sobre un botón (ej: Jugar, Reintentar, NPS, Compartir), ignorar para no bloquear el clic real
+    if (e && e.target && e.target.closest && e.target.closest('button')) {
+        return;
+    }
+
+    // Prevenir comportamientos por defecto (scroll/zoom en móvil) de forma segura en el resto del canvas
+    if (e && e.type === 'touchstart' && e.cancelable) {
+        e.preventDefault();
+    }
+    
+    // Si el juego está corriendo, saltar
     if (isGameStarted && !isGameOver) {
         player.jump();
     }
 }
 
-window.addEventListener('mousedown', handleJump);
-window.addEventListener('touchstart', handleJump, { passive: false });
-window.addEventListener('keydown', (e) => {
+// Usar document en vez de window para mejor compatibilidad móvil
+document.addEventListener('mousedown', handleJump);
+document.addEventListener('touchstart', handleJump, { passive: false });
+document.addEventListener('keydown', (e) => {
     if (e.code === 'Space' || e.key === ' ') {
-        e.preventDefault();
+        // Evitar scroll con espacio, asegurando que no estamos en un input/botón accidental
+        if (e.cancelable && (!e.target || !e.target.closest || !e.target.closest('button'))) {
+            e.preventDefault();
+        }
         handleJump(e);
     }
 });

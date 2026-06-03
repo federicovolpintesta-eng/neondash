@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Dash</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- HUD In-game (Puntuación en tiempo real) -->
+    <div id="hud" class="hidden">
+        <span id="scoreDisplay">0</span>
+    </div>
+    
+    <!-- Pantalla de Inicio -->
+    <div id="startScreen" class="overlay">
+        <div class="glass-panel fade-in">
+            <h1 class="game-title">NEON<br>DASH</h1>
+            <p>Toca para saltar, esquiva las columnas</p>
+            <button id="startBtn" class="action-btn pulse-btn">JUGAR</button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Game Over -->
+    <div id="gameOverScreen" class="overlay hidden">
+        <div class="glass-panel fade-in">
+            <h2>GAME OVER</h2>
+            <div class="score-box">
+                <p>PUNTUACIÓN</p>
+                <span id="finalScore">0</span>
+            </div>
+            
+            <!-- Componente de Feedback NPS (Net Promoter Score) -->
+            <div id="npsPanel" class="hidden">
+                <p>¿Recomendarías este juego?</p>
+                <div class="nps-scale">
+                    <button class="nps-btn" data-value="0">0</button>
+                    <button class="nps-btn" data-value="1">1</button>
+                    <button class="nps-btn" data-value="2">2</button>
+                    <button class="nps-btn" data-value="3">3</button>
+                    <button class="nps-btn" data-value="4">4</button>
+                    <button class="nps-btn" data-value="5">5</button>
+                    <button class="nps-btn" data-value="6">6</button>
+                    <button class="nps-btn" data-value="7">7</button>
+                    <button class="nps-btn" data-value="8">8</button>
+                    <button class="nps-btn" data-value="9">9</button>
+                    <button class="nps-btn" data-value="10">10</button>
+                </div>
+            </div>
+
+            <!-- Botones de Viralidad (Web Share API) -->
+            <div id="shareBox" style="margin-bottom: 2rem;">
+                <button id="shareNativeBtn" class="action-btn secondary-btn hidden">🔥 DESAFIAR A UN AMIGO</button>
+                <div id="shareFallback" class="hidden">
+                    <p style="margin-bottom:10px; font-size:0.9rem; color:var(--text-secondary); font-weight: 600;">Desafiar a tus amigos vía:</p>
+                    <div style="display:flex; justify-content:center; gap:12px;">
+                        <button id="shareWaBtn" class="social-btn wa">WhatsApp</button>
+                        <button id="shareTwBtn" class="social-btn tw">X (Twitter)</button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="retryBtn" class="action-btn pulse-btn">REINTENTAR</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

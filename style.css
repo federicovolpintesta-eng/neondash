@@ -1,0 +1,314 @@
+/* --- Variables CSS y Paleta Hyper-Casual Neón --- */
+:root {
+    --bg-color: #0b0c10; /* Azul Medianoche profundo */
+    --player-color: #00e5ff; /* Cian Neón */
+    --obstacle-color: #ff007f; /* Magenta Neón */
+    --text-primary: #ffffff; /* Blanco puro */
+    --text-secondary: #94a3b8; /* Gris azulado suave */
+    
+    /* Variables de Glassmorphism */
+    --glass-bg: rgba(20, 25, 40, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; 
+    background-color: var(--bg-color);
+    touch-action: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* El juego va detrás de toda la UI */
+}
+
+/* --- HUD Puntuación --- */
+#hud {
+    position: absolute;
+    top: 5vh;
+    left: 5vw;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+}
+
+#hud.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#scoreDisplay {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px var(--player-color); /* Glow efecto neón */
+    line-height: 1;
+}
+
+/* --- Overlays Universales (Inicio & Game Over) --- */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* Centrado perfecto mediante Flexbox */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    background: rgba(11, 12, 16, 0.7); /* Oscurece el juego de fondo */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Paneles de Cristal (Glassmorphism) --- */
+.glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 28px;
+    padding: 3.5rem 3rem;
+    text-align: center;
+    min-width: 340px;
+    max-width: 90%;
+}
+
+/* Tipografías dentro de los paneles */
+.game-title {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 1rem;
+    color: var(--player-color);
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.6); /* Glow azul */
+    letter-spacing: 2px;
+}
+
+.glass-panel h2 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    color: var(--obstacle-color);
+    text-shadow: 0 0 20px rgba(255, 0, 127, 0.6); /* Glow magenta */
+    letter-spacing: 1px;
+}
+
+.glass-panel p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+}
+
+/* Caja de Puntuación en Game Over */
+.score-box {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.score-box p {
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.score-box span {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+/* --- Panel de Feedback (NPS) --- */
+#npsPanel {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#npsPanel.hidden {
+    display: none;
+}
+
+#npsPanel p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.nps-scale {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.nps-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nps-btn:hover {
+    background: var(--player-color);
+    color: var(--bg-color);
+    border-color: var(--player-color);
+    transform: scale(1.15);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+/* --- Botones --- */
+.action-btn {
+    background: linear-gradient(135deg, var(--player-color) 0%, #0096cc 100%);
+    color: var(--bg-color);
+    border: none;
+    padding: 1.2rem 3.5rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0 5px 20px rgba(0, 229, 255, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: 'Poppins', sans-serif;
+}
+
+.action-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 229, 255, 0.6);
+}
+
+.action-btn:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 2px 10px rgba(0, 229, 255, 0.3);
+}
+
+/* --- Botones Sociales y Secundarios --- */
+.secondary-btn {
+    background: transparent;
+    border: 2px solid var(--player-color);
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    box-shadow: none;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.secondary-btn:hover {
+    background: rgba(0, 229, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2);
+}
+
+.social-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: #ffffff;
+    flex: 1;
+}
+
+.social-btn:hover {
+    transform: scale(1.05);
+}
+
+.social-btn.wa {
+    background: #25D366; /* Verde WhatsApp */
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+}
+
+.social-btn.tw {
+    background: #000000; /* Negro X */
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Animaciones CSS --- */
+.shake {
+    animation: shake-animation 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    /* Aceleración por hardware crucial para móviles */
+    transform: translate3d(0, 0, 0); 
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake-animation {
+    10%, 90% { transform: translate3d(-4px, 0, 0); }
+    20%, 80% { transform: translate3d(6px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.pulse-btn {
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.6); }
+    50% { box-shadow: 0 0 0 15px rgba(0, 229, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+}
+
+/* --- Ajustes Responsive Móvil --- */
+@media (max-width: 480px) {
+    .glass-panel { padding: 2.5rem 1.5rem; }
+    .game-title { font-size: 3.2rem; }
+    .glass-panel h2 { font-size: 2.4rem; }
+    #scoreDisplay { font-size: 3.5rem; }
+    #hud { top: 3vh; left: 6vw; }
+    .score-box span { font-size: 3.2rem; }
+}
